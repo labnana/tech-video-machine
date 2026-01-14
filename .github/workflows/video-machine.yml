@@ -1,42 +1,50 @@
-name: German Tech Video Machine
+name: Tech Video Machine
 
 on:
-  schedule:
-    - cron: "0 6 * * *"   # Daily at 6 AM
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"   # Daily run (UTC)
 
 jobs:
   build-video:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
+    - name: Install FFmpeg
+      run: sudo apt update && sudo apt install -y ffmpeg
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y ffmpeg espeak-ng
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      - name: Install Python Packages
-        run: |
-          pip install TTS
+    - name: Install Coqui TTS
+      run: |
+        pip install TTS
 
-      - name: Generate German Voice
-        run: |
-          python scripts/generate_voice.py
+    - name: Generate German Voice
+      run: |
+        python scripts/generate_voice_de.py
 
-      - name: Generate Video
-        run: |
-          python scripts/generate_video.py
+    - name: Build Long Video
+      run: |
+        chmod +x scripts/build_long_video.sh
+        scripts/build_long_video.sh
 
-      - name: Upload Final Video
-        uses: actions/upload-artifact@v4
-        with:
-          name: german-tech-video
-          path: output/final/
+    - name: Build Short Video
+      run: |
+        chmod +x scripts/build_short_video.sh
+        scripts/build_short_video.sh
+
+    - name: Generate Thumbnail
+      run: |
+        python scripts/generate_thumbnail.py
+
+    - name: Upload Outputs
+      uses: actions/upload-artifact@v4
+      with:
+        name: tech-video-output
+        path: outputs/
