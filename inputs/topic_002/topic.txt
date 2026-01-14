@@ -1,1 +1,5 @@
-
+KI Tools für Produktivität – Vollständiger Deep Dive
+TYPE=LONG
+DURATION=40
+LANG=DE
+STYLE=DOCUMENTARY
