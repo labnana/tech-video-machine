@@ -1,29 +1,16 @@
+from gtts import gTTS
 import os
-from pathlib import Path
-import subprocess
 
-BASE = Path(__file__).parent.parent
-SCRIPT_DIR = BASE / "scripts"
-VOICE_DIR = BASE / "voices"
+INPUT_TOPIC_FILE = "inputs/topic_001/topic.txt"
+OUTPUT_DIR = "outputs/voices"
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, "voice_de.wav")
 
-VOICE_DIR.mkdir(exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# latest script pick karo
-scripts = sorted(SCRIPT_DIR.glob("script_*.txt"))
-if not scripts:
-    raise Exception("❌ No script found")
+with open(INPUT_TOPIC_FILE, "r", encoding="utf-8") as f:
+    text = f.read()
 
-script_text = scripts[-1].read_text(encoding="utf-8")
+tts = gTTS(text=text, lang="de")
+tts.save(OUTPUT_FILE)
 
-output_voice = VOICE_DIR / "voice_de.wav"
-
-print("🎤 Generating German voice...")
-
-subprocess.run([
-    "tts",
-    "--text", script_text,
-    "--model_name", "tts_models/de/thorsten/tacotron2-DDC",
-    "--out_path", str(output_voice)
-])
-
-print("✅ Voice generated:", output_voice)
+print(f"Voice generated successfully at {OUTPUT_FILE}")
