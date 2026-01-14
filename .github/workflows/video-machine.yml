@@ -1,50 +1,13 @@
-name: Tech Video Machine
+- name: Set up Python
+  uses: actions/setup-python@v5
+  with:
+    python-version: '3.10'
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"   # Daily run (UTC)
+- name: Install dependencies
+  run: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
 
-jobs:
-  build-video:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: Install FFmpeg
-      run: sudo apt update && sudo apt install -y ffmpeg
-
-    - name: Install Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: Install Coqui TTS
-      run: |
-        pip install TTS
-
-    - name: Generate German Voice
-      run: |
-        python scripts/generate_voice_de.py
-
-    - name: Build Long Video
-      run: |
-        chmod +x scripts/build_long_video.sh
-        scripts/build_long_video.sh
-
-    - name: Build Short Video
-      run: |
-        chmod +x scripts/build_short_video.sh
-        scripts/build_short_video.sh
-
-    - name: Generate Thumbnail
-      run: |
-        python scripts/generate_thumbnail.py
-
-    - name: Upload Outputs
-      uses: actions/upload-artifact@v4
-      with:
-        name: tech-video-output
-        path: outputs/
+- name: Generate Voice
+  run: |
+    python scripts/generate_voice.py
