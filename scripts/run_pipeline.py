@@ -1,41 +1,58 @@
-from pathlib import Path
-from datetime import datetime
+import os
+import subprocess
 
-BASE = Path(__file__).parent.parent
+INPUTS_DIR = "inputs"
+OUTPUTS_DIR = "outputs"
 
-SCRIPT_DIR = BASE / "scripts"
-VOICE_DIR = BASE / "voices"
-OUTPUT_DIR = BASE / "output"
+def read_topic(topic_path):
+    data = {}
+    with open(topic_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if "=" in line:
+                k, v = line.strip().split("=", 1)
+                data[k.strip()] = v.strip()
+            else:
+                data["TOPIC"] = line.strip()
+    return data
 
-SCRIPT_DIR.mkdir(exist_ok=True)
-VOICE_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR.mkdir(exist_ok=True)
+def run():
+    print("🚀 Tech Video Machine Pipeline Started")
 
-topic = "KI Tools für Produktivität"
+    for topic_folder in sorted(os.listdir(INPUTS_DIR)):
+        topic_dir = os.path.join(INPUTS_DIR, topic_folder)
+        topic_file = os.path.join(topic_dir, "topic.txt")
 
-script_text = f"""
-TITEL: {topic} – Tech Analyse 2026
+        if not os.path.isfile(topic_file):
+            continue
 
-HOOK:
-Wusstest du, dass KI Tools gerade die Art verändern, wie wir arbeiten?
+        print(f"\n📄 Processing {topic_folder}")
+        topic = read_topic(topic_file)
 
-INTRO:
-Willkommen! Heute schauen wir uns {topic} an – einfach erklärt.
+        video_type = topic.get("TYPE", "SHORT").upper()
+        language = topic.get("LANG", "DE")
 
-MAIN:
-Diese Tools sparen Zeit, reduzieren Fehler und skalieren Prozesse.
+        # 1️⃣ Generate Voice
+        print("🔊 Generating voice...")
+        subprocess.run(
+            ["python", "scripts/generate_voice.py"],
+            check=True
+        )
 
-OUTRO:
-Abonniere für mehr ehrliche Tech-Videos.
-"""
+        # 2️⃣ Build Video
+        if video_type == "SHORT":
+            print("🎬 Building SHORT video")
+            subprocess.run(
+                ["bash", "scripts/build_short_video.sh"],
+                check=True
+            )
+        else:
+            print("🎞️ Building LONG video")
+            subprocess.run(
+                ["bash", "scripts/build_long_video.sh"],
+                check=True
+            )
 
-timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+    print("\n✅ Pipeline completed successfully")
 
-script_file = SCRIPT_DIR / f"script_{timestamp}.txt"
-script_file.write_text(script_text, encoding="utf-8")
-
-output_file = OUTPUT_DIR / f"READY_{timestamp}.txt"
-output_file.write_text("Pipeline erfolgreich gestartet", encoding="utf-8")
-
-print("✅ Script generated")
-print("✅ Pipeline base OK")
+if __name__ == "__main__":
+    run()
