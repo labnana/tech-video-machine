@@ -1,0 +1,8 @@
+
+# runtime outputs
+outputs/voices/*
+outputs/videos_shorts/*
+outputs/videos_long/*
+outputs/music/*
+outputs/broll/*
+!outputs/broll/sample.mp4
