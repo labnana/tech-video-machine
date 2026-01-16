@@ -1,21 +1,15 @@
+import os
 from gtts import gTTS
-from pathlib import Path
 
-# Read topic text (FULL file)
-topic_file = Path("inputs/topic_001/topic.txt")
-text = topic_file.read_text(encoding="utf-8")
+os.makedirs("outputs/voices", exist_ok=True)
 
-# Generate German voice
-tts = gTTS(
-    text=text,
-    lang="de",
-    slow=False
-)
+def make_voice(text, out):
+    tts = gTTS(text=text, lang="de")
+    tts.save(out)
+    print(f"✅ Voice created: {out}")
 
-output_dir = Path("outputs/voices")
-output_dir.mkdir(parents=True, exist_ok=True)
+SHORT_TEXT = "Dies ist ein kurzes Tech Video. " * 30   # ~60 sec
+LONG_TEXT  = "Dies ist ein langes Tech Video. " * 180  # ~6 min
 
-output_file = output_dir / "voice_de.wav"
-tts.save(str(output_file))
-
-print(f"Voice generated successfully at {output_file}")
+make_voice(SHORT_TEXT, "outputs/voices/voice_short_de.wav")
+make_voice(LONG_TEXT,  "outputs/voices/voice_long_de.wav")
