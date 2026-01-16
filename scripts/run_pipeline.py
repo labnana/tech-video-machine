@@ -1,12 +1,18 @@
 import subprocess
-from pathlib import Path
+import os
 
-print("Starting pipeline...")
+print("🚀 Tech Video Machine Pipeline Started")
 
-# Step 1: Generate voice
+os.makedirs("outputs/videos_shorts", exist_ok=True)
+os.makedirs("outputs/videos_long", exist_ok=True)
+
+print("🔊 Generating voices...")
 subprocess.run(["python", "scripts/generate_voice.py"], check=True)
 
-# Step 2: Build short video
+print("🎬 Building SHORT video...")
 subprocess.run(["bash", "scripts/build_short_video.sh"], check=True)
 
-print("Pipeline finished successfully")
+print("🎞️ Building LONG video...")
+subprocess.run(["bash", "scripts/build_long_video.sh"], check=True)
+
+print("✅ Pipeline finished successfully")
