@@ -8,8 +8,11 @@ def make_voice(text, out):
     tts.save(out)
     print(f"✅ Voice created: {out}")
 
-SHORT_TEXT = "Dies ist ein kurzes Tech Video. " * 30   # ~60 sec
-LONG_TEXT  = "Dies ist ein langes Tech Video. " * 180  # ~6 min
+# ~60 sec
+SHORT_TEXT = "Dies ist ein kurzes Tech Video. " * 30
+
+# ~5–6 min
+LONG_TEXT = "Dies ist ein langes Tech Video. " * 180
 
 make_voice(SHORT_TEXT, "outputs/voices/voice_short_de.wav")
 make_voice(LONG_TEXT,  "outputs/voices/voice_long_de.wav")
