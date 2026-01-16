@@ -1,0 +1,14 @@
+[
+  {
+    "id": "001",
+    "topic": "Was ist Künstliche Intelligenz?",
+    "duration_sec": 60,
+    "type": "short"
+  },
+  {
+    "id": "002",
+    "topic": "Wie funktionieren Large Language Models?",
+    "duration_sec": 300,
+    "type": "long"
+  }
+]

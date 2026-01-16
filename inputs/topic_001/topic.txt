@@ -1,3 +1,0 @@
-KI Tools für Produktivität
-TYPE=SHORT
-LANG=DE
