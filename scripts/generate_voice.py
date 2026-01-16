@@ -1,11 +1,11 @@
 from gtts import gTTS
 from pathlib import Path
 
-# Read topic script
-script_path = Path("inputs/topic_001/topic.txt")
-text = script_path.read_text(encoding="utf-8")
+# Read topic text (FULL file)
+topic_file = Path("inputs/topic_001/topic.txt")
+text = topic_file.read_text(encoding="utf-8")
 
-# German male-style voice (gTTS limitation: gender simulated via params)
+# Generate German voice
 tts = gTTS(
     text=text,
     lang="de",
@@ -15,7 +15,7 @@ tts = gTTS(
 output_dir = Path("outputs/voices")
 output_dir.mkdir(parents=True, exist_ok=True)
 
-output_file = output_dir / "voice_de_male.wav"
+output_file = output_dir / "voice_de.wav"
 tts.save(str(output_file))
 
-print(f"Male German voice generated: {output_file}")
+print(f"Voice generated successfully at {output_file}")
